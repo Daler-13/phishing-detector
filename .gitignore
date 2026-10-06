@@ -1,0 +1,15 @@
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+database/*.db
+
+dataset/raw/
+dataset/processed/
+
+.env
+
+.idea/
+.vscode/

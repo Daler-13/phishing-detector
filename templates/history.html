@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>История проверок — Phishing Detector</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #0f172a;
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 92%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 50px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .header h1 {
+            font-size: 38px;
+            margin-bottom: 12px;
+        }
+
+        .header p {
+            color: #94a3b8;
+            font-size: 17px;
+        }
+
+        .navigation {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .nav-button {
+            display: inline-block;
+            padding: 12px 22px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+
+        .nav-button:hover {
+            background: #1d4ed8;
+        }
+
+        .card {
+            background: #1e293b;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow:
+                0 20px 50px rgba(0, 0, 0, 0.3);
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            color: #94a3b8;
+            font-size: 14px;
+            padding: 18px 15px;
+            border-bottom: 1px solid #334155;
+        }
+
+        td {
+            padding: 18px 15px;
+            border-bottom: 1px solid #334155;
+        }
+
+        tr:hover {
+            background: #172033;
+        }
+
+        .url {
+            max-width: 450px;
+            word-break: break-all;
+            color: #cbd5e1;
+        }
+
+        .safe {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .phishing {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .low {
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+
+        .high {
+            color: #ef4444;
+            font-weight: bold;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px;
+            color: #94a3b8;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            margin-top: 35px;
+            font-size: 14px;
+        }
+
+        @media (max-width: 700px) {
+
+            .header h1 {
+                font-size: 30px;
+            }
+
+            .card {
+                padding: 10px;
+            }
+
+            th,
+            td {
+                padding: 12px 8px;
+                font-size: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container">
+
+    <div class="header">
+
+        <h1>📋 История проверок</h1>
+
+        <p>
+            История анализов веб-адресов
+        </p>
+
+    </div>
+
+
+    <div class="navigation">
+
+        <a
+            href="/"
+            class="nav-button"
+        >
+            ← Проверить новый URL
+        </a>
+
+    </div>
+
+
+    <div class="card">
+
+        {% if predictions %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>ID</th>
+
+                    <th>URL</th>
+
+                    <th>Результат</th>
+
+                    <th>Вероятность</th>
+
+                    <th>Риск</th>
+
+                    <th>Дата</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for prediction in predictions %}
+
+                <tr>
+
+                    <td>
+                        {{ prediction["id"] }}
+                    </td>
+
+
+                    <td class="url">
+
+                        {{ prediction["url"] }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if prediction["result"] == "Safe" %}
+
+                            <span class="safe">
+                                🟢 Safe
+                            </span>
+
+                        {% else %}
+
+                            <span class="phishing">
+                                🔴 Phishing
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ "%.2f"|format(
+                            prediction["probability"] * 100
+                        ) }}%
+
+                    </td>
+
+
+                    <td>
+
+                        {% if prediction["risk"] == "LOW" %}
+
+                            <span class="low">
+                                🟢 LOW
+                            </span>
+
+                        {% elif prediction["risk"] == "MEDIUM" %}
+
+                            <span class="medium">
+                                🟡 MEDIUM
+                            </span>
+
+                        {% else %}
+
+                            <span class="high">
+                                🔴 HIGH
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ prediction["created_at"] }}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        {% else %}
+
+        <div class="empty">
+
+            <h2>История пока пуста</h2>
+
+            <p>
+                Выполните первую проверку URL,
+                чтобы она появилась здесь.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <div class="footer">
+
+        Phishing Detector © 2026
+
+    </div>
+
+</div>
+
+</body>
+
+</html>
