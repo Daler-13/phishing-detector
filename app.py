@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
 
-from src.predictor import PhishingPredictor
+from src.predictor_v4 import PhishingPredictorV4
 
 from database.database import (
     init_database,
@@ -14,7 +14,7 @@ import pandas as pd
 
 app = Flask(__name__)
 
-predictor = PhishingPredictor()
+predictor = PhishingPredictorV4()
 
 init_database()
 
